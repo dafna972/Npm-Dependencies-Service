@@ -1,5 +1,4 @@
 const express = require('express')
-const https = require('https')
 const async=require('async')
 const fetch = require("node-fetch")
 
@@ -9,22 +8,16 @@ const noDependenciesString = "no dependencies"
 const errorNpmString = "Not Found"
   
 let pckgsDic = {}
+app.listen(port, () => console.log(`Dependencies service is listening on port ${port}! \nUsing example: 127.0.0.1:3000/express`))
 
-
-app.listen(port, () => console.log(`Dependencies service is listening on port ${port}!`))
-
-app.get('/:package', async (req, res) => {
+app.get('/:package', function (req, res) {
     
-    if (pckgsDic[req.params.package] == errorNpmString)
-        res.json(errorNpmString)
-
-    else if (!pckgsDic[req.params.package])
+    if (!pckgsDic[req.params.package]){        
         GetNpmDependencies(req.params.package)
-            .then(() => {
-                res.json(RootTree(req.params.package))
-            });
+            .then(res.json(RootTree(req.params.package)));
+    }
 
-    else 
+     else 
     {
         console.log("cached")
         res.json(RootTree(req.params.package))
@@ -40,13 +33,12 @@ function GetNpmDependencies(package) {
             {                
                 pckgsDic[package] = x.dependencies
                 for(var propertyName in x.dependencies) {
-                    GetNpmDependencies(propertyName)}
+                    if (!pckgsDic[package])
+                        GetNpmDependencies(propertyName)}
             }
             
             else    
                 pckgsDic[package] = noDependenciesString
-            
-            return x
             })
 }
 
