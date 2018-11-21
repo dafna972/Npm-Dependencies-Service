@@ -1,0 +1,17 @@
+{
+  "name": "dependeciesservice",
+  "version": "1.0.0",
+  "description": "A web service for finding the dependecies for a given npm package",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Dafna Ehrman",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.6.1",
+    "express": "^4.16.4",
+    "get-dependencies": "^1.1.0",
+    "node-fetch": "^2.3.0"
+  }
+}
