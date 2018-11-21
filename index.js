@@ -1,9 +1,9 @@
 const express = require('express')
 const https = require('https')
 const async=require('async')
-const unique = require('array-unique')
-const app = express()
 const fetch = require("node-fetch")
+
+const app = express()
 const port = 3000
 const noDependenciesString = "no dependencies"
 const errorNpmString = "Not Found"
