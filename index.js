@@ -36,11 +36,7 @@ function GetNpmDependencies(package) {
     return fetch(`https://registry.npmjs.org/${package}/latest`)
         .then(x => x.json())
         .then(x=> {
-            console.log(package + x.dependencies)
-
-            if(x == errorNpmString)
-                return x
-            else if (x.dependencies)
+            if (x.dependencies)
             {                
                 pckgsDic[package] = x.dependencies
                 for(var propertyName in x.dependencies) {
