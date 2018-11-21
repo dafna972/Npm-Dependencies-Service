@@ -15,9 +15,12 @@ app.listen(port, () => console.log(`Dependencies service is listening on port ${
 
 app.get('/:package', async (req, res) => {
     
-    if (!pckgsDic[req.params.package])
+    if (pckgsDic[req.params.package] == errorNpmString)
+        res.json(errorNpmString)
+
+    else if (!pckgsDic[req.params.package])
         GetNpmDependencies(req.params.package)
-            .then(success => {
+            .then(() => {
                 res.json(RootTree(req.params.package))
             });
 
@@ -29,13 +32,15 @@ app.get('/:package', async (req, res) => {
         
 })
 
-async function GetNpmDependencies(package) {
+function GetNpmDependencies(package) {
     return fetch(`https://registry.npmjs.org/${package}/latest`)
         .then(x => x.json())
         .then(x=> {
+            console.log(package + x.dependencies)
+
             if(x == errorNpmString)
-                return
-            if (x.dependencies)
+                return x
+            else if (x.dependencies)
             {                
                 pckgsDic[package] = x.dependencies
                 for(var propertyName in x.dependencies) {
@@ -51,11 +56,10 @@ async function GetNpmDependencies(package) {
 
 function RootTree(package){
     let result = {}
-    if (!pckgsDic[package])
-        return errorNpmString
+    
     result[package] = pckgsDic[package]
 
-    if (result[package] === noDependenciesString)
+    if (result[package] == noDependenciesString)
         return noDependenciesString
 
     for (var propertyName in result[package])
