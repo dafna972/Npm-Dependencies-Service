@@ -14,7 +14,7 @@ app.get('/:package', async (req, res) => {
 
     if (pckgsDic[req.params.package])
     {
-        res.json(pckgsDic[req.params.package])
+        res.json(RootTree(req.params.package))
         console.log("cached")
     }
     else
